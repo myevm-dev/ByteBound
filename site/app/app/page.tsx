@@ -13,7 +13,7 @@ export default function AppPage() {
             <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
               <Sparkles className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="font-mono text-lg font-semibold text-foreground">AI.PUBLISH</span>
+            <span className="font-mono text-lg font-semibold text-foreground">ByteBound</span>
           </Link>
         </div>
       </nav>

@@ -84,7 +84,7 @@ export default function BooksPage() {
             <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
               <Sparkles className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="font-mono text-lg font-semibold text-foreground">AI.PUBLISH</span>
+            <span className="font-mono text-lg font-semibold text-foreground">Bytebound</span>
           </Link>
           <div className="flex items-center gap-6">
             <Link href="/app" className="text-sm text-muted-foreground hover:text-foreground transition-colors">

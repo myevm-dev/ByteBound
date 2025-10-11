@@ -52,7 +52,7 @@ export default function MotionPicturesPage() {
               <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-primary-foreground" />
               </div>
-              <span className="font-mono text-lg font-semibold text-foreground">AI.PUBLISH</span>
+              <span className="font-mono text-lg font-semibold text-foreground">Bytebound</span>
             </Link>
             <div className="hidden md:flex items-center gap-6 text-sm">
               <button className="text-foreground hover:text-muted-foreground transition-colors">Home</button>
