@@ -7,44 +7,41 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
-      <nav className="border-b border-border/40 backdrop-blur-sm fixed top-0 w-full z-50 bg-background/80">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <span className="font-mono text-lg font-semibold text-foreground">Bytebound Publishing</span>
-          </Link>
-          <div className="hidden md:flex items-center gap-8">
-            <Link
-              href="/awards"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors relative group"
-            >
-              <span className="relative inline-flex items-center gap-1">
-                Awards
-                <Award className="w-3 h-3 text-accent-secondary animate-pulse" />
-              </span>
-              <span className="absolute -top-1 -right-1 w-2 h-2 bg-accent-secondary rounded-full animate-ping" />
-            </Link>
-            <Link href="/services" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Services
-            </Link>
-            <a href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              How It Works
-            </a>
-            <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              About
-            </Link>
-            <Button
-              size="sm"
-              className="bg-accent-secondary text-accent-secondary-foreground hover:bg-accent-secondary/90"
-              asChild
-            >
-              <Link href="/app">Get Started</Link>
-            </Button>
-          </div>
-        </div>
-      </nav>
+<nav className="border-b border-border/40 backdrop-blur-sm fixed top-0 w-full z-50 bg-background/80">
+  <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+    <Link href="/" className="flex items-center gap-2">
+      <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
+        
+      </div>
+      <span className="font-mono text-lg font-semibold text-foreground">Bytebound Publishing</span>
+    </Link>
+
+    <div className="hidden md:flex items-center gap-8">
+
+      <Link href="/awards" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+        Awards
+      </Link>
+
+      <Link href="/services" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+        Services
+      </Link>
+      <a href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+        How It Works
+      </a>
+      <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+        About
+      </Link>
+      <Button
+        size="sm"
+        className="bg-accent-secondary text-accent-secondary-foreground hover:bg-accent-secondary/90"
+        asChild
+      >
+        <Link href="/app">Shop Media</Link>
+      </Button>
+    </div>
+  </div>
+</nav>
+
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-6">
@@ -68,7 +65,7 @@ export default function HomePage() {
                 className="bg-accent-secondary text-accent-secondary-foreground hover:bg-accent-secondary/90 text-base px-8"
                 asChild
               >
-                <Link href="/studio">Studio</Link>
+                <Link href="/studio">STUDIO</Link>
               </Button>
               <Button
                 size="lg"
@@ -76,7 +73,7 @@ export default function HomePage() {
                 className="text-base px-8 border-border hover:bg-secondary bg-transparent"
                 asChild
               >
-                <Link href="/app">APP</Link>
+                <Link href="/app">EXPLORE</Link>
               </Button>
             </div>
           </div>
