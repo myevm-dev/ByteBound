@@ -59,7 +59,7 @@ export default function MotionPicturesPage() {
               <button className="text-muted-foreground hover:text-foreground transition-colors">Films</button>
               <button className="text-muted-foreground hover:text-foreground transition-colors">Series</button>
               <button className="text-muted-foreground hover:text-foreground transition-colors">My List</button>
-                   <button className="text-muted-foreground hover:text-foreground transition-colors">Owned</button>
+          
             </div>
           </div>
           <div className="flex items-center gap-4">
