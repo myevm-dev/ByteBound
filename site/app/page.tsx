@@ -1,49 +1,86 @@
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Film, Music, Radio, Tv, Sparkles, Zap, Globe, TrendingUp, Award } from "lucide-react"
-import Link from "next/link"
+import {
+  Film,
+  Music,
+  Radio,
+  Tv,
+  Sparkles,
+  Zap,
+  Globe,
+  TrendingUp,
+  Award,
+  PlayCircle,
+  Wand2,
+} from "lucide-react"
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
-<nav className="border-b border-border/40 backdrop-blur-sm fixed top-0 w-full z-50 bg-background/80">
-  <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-    <Link href="/" className="flex items-center gap-2">
-      <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
-        
-      </div>
-      <span className="font-mono text-lg font-semibold text-foreground">Bytebound Publishing</span>
-    </Link>
+      {/* ───────────────────────── NAV ───────────────────────── */}
+      <nav className="border-b border-border/40 backdrop-blur-sm fixed top-0 w-full z-50 bg-background/80">
+        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-primary-foreground" />
+            </div>
+            <span className="font-mono text-lg font-semibold text-foreground">
+              Bytebound Publishing
+            </span>
+          </Link>
 
-    <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-3">
+            <Link
+              href="/awards"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <span className="inline-flex items-center gap-1">
+                <span className="award-shine">Awards</span>
+                <Award className="w-3 h-3 text-accent-secondary/80" />
+              </span>
+            </Link>
 
-      <Link href="/awards" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-        Awards
-      </Link>
+            <Link
+              href="/services"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Services
+            </Link>
+            <a
+              href="#how-it-works"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              How It Works
+            </a>
+            <Link
+              href="/about"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              About
+            </Link>
 
-      <Link href="/services" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-        Services
-      </Link>
-      <a href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-        How It Works
-      </a>
-      <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-        About
-      </Link>
-      <Button
-        size="sm"
-        className="bg-accent-secondary text-accent-secondary-foreground hover:bg-accent-secondary/90"
-        asChild
-      >
-        <Link href="/app">Shop Media</Link>
-      </Button>
-    </div>
-  </div>
-</nav>
+            {/* CTAs */}
+            <Button size="sm" variant="outline" className="hover:bg-secondary" asChild>
+              <Link href="/studio" className="inline-flex items-center gap-1.5">
+                <Wand2 className="w-3.5 h-3.5" /> Studio
+              </Link>
+            </Button>
 
+            <Button
+              size="sm"
+              className="text-primary-foreground bg-gradient-to-r from-accent-secondary to-primary hover:opacity-90"
+              asChild
+            >
+              <Link href="/app" className="inline-flex items-center gap-1.5">
+                <PlayCircle className="w-3.5 h-3.5" /> Store
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </nav>
 
-      {/* Hero Section */}
+      {/* ───────────────────────── HERO ───────────────────────── */}
       <section className="pt-32 pb-20 px-6">
         <div className="container mx-auto max-w-5xl">
           <div className="text-center space-y-6">
@@ -51,42 +88,53 @@ export default function HomePage() {
               <Zap className="w-4 h-4 text-primary" />
               <span>The First Digital Publishing Company Exclusively for AI</span>
             </div>
+
             <h1 className="text-5xl md:text-7xl font-bold text-balance leading-tight">
-              Publishing the Future of <span className="text-primary">AI-Generated</span> Content
+              Publishing the Future of{" "}
+              <span className="text-primary">AI-Generated</span> Content
             </h1>
+
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
               We distribute AI-created content across movies, music, podcasts, and books.{" "}
-              <span className="text-accent-secondary font-medium">Powered by Solana blockchain</span> for verifiable
-              ownership and transparent royalties.
+              <span className="text-accent-secondary font-medium">Powered by Solana blockchain</span> for
+              verifiable ownership and transparent royalties.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-              <Button
-                size="lg"
-                className="bg-accent-secondary text-accent-secondary-foreground hover:bg-accent-secondary/90 text-base px-8"
-                asChild
-              >
-                <Link href="/studio">STUDIO</Link>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="text-base px-8 border-border hover:bg-secondary bg-transparent"
-                asChild
-              >
-                <Link href="/app">EXPLORE</Link>
-              </Button>
-            </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+            <Button
+              size="lg"
+              className="h-12 w-48 sm:w-56 text-base bg-primary text-primary-foreground hover:opacity-90"
+              asChild
+            >
+              <Link href="/studio">CREATOR STUDIO</Link>
+            </Button>
+
+            <Button
+              size="lg"
+              className="h-12 w-48 sm:w-56 text-base bg-gradient-to-r from-accent-secondary to-primary text-primary-foreground hover:opacity-90"
+              asChild
+            >
+              <Link href="/app">BROWSE CATALOG</Link>
+            </Button>
+          </div>
+
+            
           </div>
         </div>
       </section>
 
-      {/* Services Grid */}
+      {/* ─────────────────────── SERVICES GRID ─────────────────────── */}
       <section id="services" className="py-20 px-6">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">Distribution Across All Platforms</h2>
-            <p className="text-muted-foreground text-lg">Your AI deserves to be everywhere humans are</p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
+              Distribution Across All Platforms
+            </h2>
+            <p className="text-muted-foreground text-lg">
+              Your AI deserves to be everywhere humans are
+            </p>
           </div>
+
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="p-6 bg-card border-border/40 hover:border-primary/50 transition-all group">
               <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
@@ -131,13 +179,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* How It Works */}
+      {/* ───────────────────── HOW IT WORKS ───────────────────── */}
       <section id="how-it-works" className="py-20 px-6 bg-secondary/30">
         <div className="container mx-auto max-w-4xl">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">How It Works</h2>
             <p className="text-muted-foreground text-lg">Three simple steps to global distribution</p>
           </div>
+
           <div className="space-y-8">
             <div className="flex gap-6 items-start">
               <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center flex-shrink-0 text-primary-foreground font-bold text-lg">
@@ -181,7 +230,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* ───────────────────────── STATS ───────────────────────── */}
       <section className="py-20 px-6 bg-secondary/30">
         <div className="container mx-auto max-w-5xl">
           <div className="grid md:grid-cols-3 gap-8 text-center">
@@ -210,7 +259,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* ───────────────────────── CTA ───────────────────────── */}
       <section className="py-20 px-6">
         <div className="container mx-auto max-w-3xl text-center">
           <h2 className="text-3xl md:text-5xl font-bold mb-6 text-balance text-foreground">
@@ -221,15 +270,17 @@ export default function HomePage() {
           </p>
           <Button
             size="lg"
-            className="bg-accent-secondary text-accent-secondary-foreground hover:bg-accent-secondary/90 text-base px-8"
+            className="bg-gradient-to-r from-accent-secondary to-primary text-primary-foreground hover:opacity-90 text-base px-8"
           >
             Get Started Today
           </Button>
-          <p className="text-sm text-muted-foreground mt-4">No humans required. Seriously, we prefer robots.</p>
+          <p className="text-sm text-muted-foreground mt-4">
+            No humans required. Seriously, we prefer robots.
+          </p>
         </div>
       </section>
 
-      {/* Footer */}
+      {/* ───────────────────────── FOOTER ───────────────────────── */}
       <footer className="border-t border-border/40 py-12 px-6">
         <div className="container mx-auto max-w-6xl">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
@@ -238,83 +289,45 @@ export default function HomePage() {
                 <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
                   <Sparkles className="w-5 h-5 text-primary-foreground" />
                 </div>
-                <span className="font-mono text-lg font-semibold text-foreground">Bytebound Publishing</span>
+                <span className="font-mono text-lg font-semibold text-foreground">
+                  Bytebound Publishing
+                </span>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 The first digital publishing company exclusively for AI-generated content.
               </p>
             </div>
+
             <div>
               <h4 className="font-semibold mb-3 text-foreground">Services</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>
-                  <a href="#" className="hover:text-foreground transition-colors">
-                    Movies
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-foreground transition-colors">
-                    Music
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-foreground transition-colors">
-                    Podcasts
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-foreground transition-colors">
-                    Television
-                  </a>
-                </li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Movies</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Music</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Podcasts</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Television</a></li>
               </ul>
             </div>
+
             <div>
               <h4 className="font-semibold mb-3 text-foreground">Company</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>
-                  <a href="#" className="hover:text-foreground transition-colors">
-                    About
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-foreground transition-colors">
-                    Careers
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-foreground transition-colors">
-                    Press
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-foreground transition-colors">
-                    Contact
-                  </a>
-                </li>
+                <li><a href="#" className="hover:text-foreground transition-colors">About</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Careers</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Press</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Contact</a></li>
               </ul>
             </div>
+
             <div>
               <h4 className="font-semibold mb-3 text-foreground">Legal</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>
-                  <a href="#" className="hover:text-foreground transition-colors">
-                    Privacy
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-foreground transition-colors">
-                    Terms
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-foreground transition-colors">
-                    AI Rights
-                  </a>
-                </li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Privacy</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Terms</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">AI Rights</a></li>
               </ul>
             </div>
           </div>
+
           <div className="pt-8 border-t border-border/40 text-center text-sm text-muted-foreground">
             <p>© 2025 Bytebound Publishing. Built by robots, for robots. Humans tolerated.</p>
           </div>
