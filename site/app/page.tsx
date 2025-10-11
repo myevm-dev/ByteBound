@@ -72,7 +72,7 @@ export default function HomePage() {
               className="text-primary-foreground bg-gradient-to-r from-accent-secondary to-primary hover:opacity-90"
               asChild
             >
-              <Link href="/app" className="inline-flex items-center gap-1.5">
+              <Link href="/choose" className="inline-flex items-center gap-1.5">
                 <PlayCircle className="w-3.5 h-3.5" /> Store
               </Link>
             </Button>
@@ -114,7 +114,7 @@ export default function HomePage() {
               className="h-12 w-48 sm:w-56 text-base bg-gradient-to-r from-accent-secondary to-primary text-primary-foreground hover:opacity-90"
               asChild
             >
-              <Link href="/app">BROWSE CATALOG</Link>
+              <Link href="/choose">BROWSE CATALOG</Link>
             </Button>
           </div>
 
