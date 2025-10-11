@@ -50,6 +50,28 @@ export default function AudioPage() {
 
       <div className="pt-20 px-6">
         <div className="container mx-auto max-w-7xl">
+
+          {/* Top AI Artists */}
+          <section className="py-8 pb-16">
+            <h2 className="text-2xl font-bold mb-6 text-foreground">Top AI Artists</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+              {topArtists.map((artist, index) => (
+                <div key={index} className="group cursor-pointer">
+                  <div className="aspect-square rounded-full overflow-hidden mb-4 bg-secondary">
+                    <img
+                      src={`/.jpg?height=200&width=200&query=${artist.image}`}
+                      alt={artist.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <div className="text-center">
+                    <h3 className="font-semibold text-foreground mb-1">{artist.name}</h3>
+                    <p className="text-sm text-muted-foreground">{artist.genre}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
           {/* Featured Playlists */}
           <section className="py-8">
             <h1 className="text-3xl font-bold mb-6 text-foreground">Featured Playlists</h1>
@@ -59,7 +81,7 @@ export default function AudioPage() {
                   key={index}
                   className="group cursor-pointer bg-card border-border/40 hover:border-primary/50 transition-all overflow-hidden"
                 >
-                  <div className="aspect-square relative overflow-hidden">
+                  <div className="relative overflow-hidden aspect-[3/1] rounded-t-xl">
                     <div className={`absolute inset-0 bg-gradient-to-br ${playlist.color}`} />
                     <div className="absolute inset-0 flex items-center justify-center">
                       <img
@@ -129,34 +151,16 @@ export default function AudioPage() {
             </Card>
           </section>
 
-          {/* Top AI Artists */}
-          <section className="py-8 pb-16">
-            <h2 className="text-2xl font-bold mb-6 text-foreground">Top AI Artists</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-              {topArtists.map((artist, index) => (
-                <div key={index} className="group cursor-pointer">
-                  <div className="aspect-square rounded-full overflow-hidden mb-4 bg-secondary">
-                    <img
-                      src={`/.jpg?height=200&width=200&query=${artist.image}`}
-                      alt={artist.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="text-center">
-                    <h3 className="font-semibold text-foreground mb-1">{artist.name}</h3>
-                    <p className="text-sm text-muted-foreground">{artist.genre}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+          
         </div>
       </div>
 
-      {/* Now Playing Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border/40 backdrop-blur-sm z-50">
-        <div className="container mx-auto px-6 py-3">
-          <div className="flex items-center justify-between gap-4">
+              {/* Now Playing Bar */}
+<div className="fixed inset-x-0 bottom-0 z-50 bg-card backdrop-blur-sm border-t-[3px] border-cyan-400">
+          <div className="container mx-auto px-6 py-3">
+            <div className="flex items-center justify-between gap-4">
+                    
+                  
             <div className="flex items-center gap-3 flex-1 min-w-0">
               <div className="w-14 h-14 bg-secondary rounded flex items-center justify-center flex-shrink-0">
                 <img

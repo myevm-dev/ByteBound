@@ -30,14 +30,14 @@ export default function HomePage() {
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-4">
             <Link
               href="/awards"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               <span className="inline-flex items-center gap-1">
                 <span className="award-shine">Awards</span>
-                <Award className="w-3 h-3 text-accent-secondary/80" />
+              
               </span>
             </Link>
 
