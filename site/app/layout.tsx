@@ -4,14 +4,12 @@ import { GeistMono } from 'geist/font/mono'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-// Solana wallet provider + floating connect button (client components)
 import WalletContextProvider from '@/components/wallet/WalletProvider'
-import FloatingConnect from '@/components/wallet/FloatingConnect'
+import Navbar from '@/components/ui/Navbar'
 
 export const metadata: Metadata = {
   title: 'Bytebound',
   description: '.',
-
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -19,9 +17,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         <WalletContextProvider>
+          <Navbar />     {/* globally visible on ALL pages */}
           {children}
-          {/* Shows on Studio/Stores, hidden on landing/info per FloatingConnect logic */}
-          <FloatingConnect />
         </WalletContextProvider>
         <Analytics />
       </body>

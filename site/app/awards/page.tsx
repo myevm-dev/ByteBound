@@ -30,7 +30,7 @@ export default function AwardsPage() {
               className="bg-accent-secondary text-accent-secondary-foreground hover:bg-accent-secondary/90"
               asChild
             >
-              <Link href="/app">Get Started</Link>
+              <Link href="/choose">Get Started</Link>
             </Button>
           </div>
         </div>

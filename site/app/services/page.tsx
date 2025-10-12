@@ -38,7 +38,7 @@ export default function ServicesPage() {
               About
             </Link>
             <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90" asChild>
-              <Link href="/app">Get Started</Link>
+              <Link href="/choose">Get Started</Link>
             </Button>
           </div>
         </div>

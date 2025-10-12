@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from 'next/image'
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import {
@@ -18,68 +19,7 @@ import {
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">
-      {/* ───────────────────────── NAV ───────────────────────── */}
-      <nav className="border-b border-border/40 backdrop-blur-sm fixed top-0 w-full z-50 bg-background/80">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <span className="font-mono text-lg font-semibold text-foreground">
-              Bytebound Publishing
-            </span>
-          </Link>
-
-          <div className="hidden md:flex items-center gap-4">
-            <Link
-              href="/awards"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <span className="inline-flex items-center gap-1">
-                <span className="award-shine">Awards</span>
-              
-              </span>
-            </Link>
-
-            <Link
-              href="/services"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Services
-            </Link>
-            <a
-              href="#how-it-works"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              How It Works
-            </a>
-            <Link
-              href="/about"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              About
-            </Link>
-
-            {/* CTAs */}
-            <Button size="sm" variant="outline" className="hover:bg-secondary" asChild>
-              <Link href="/studio" className="inline-flex items-center gap-1.5">
-                <Wand2 className="w-3.5 h-3.5" /> Studio
-              </Link>
-            </Button>
-
-            <Button
-              size="sm"
-              className="text-primary-foreground bg-gradient-to-r from-accent-secondary to-primary hover:opacity-90"
-              asChild
-            >
-              <Link href="/choose" className="inline-flex items-center gap-1.5">
-                <PlayCircle className="w-3.5 h-3.5" /> Store
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </nav>
-
+   
       {/* ───────────────────────── HERO ───────────────────────── */}
       <section className="pt-32 pb-20 px-6">
         <div className="container mx-auto max-w-5xl">
@@ -284,27 +224,29 @@ export default function HomePage() {
       <footer className="border-t border-border/40 py-12 px-6">
         <div className="container mx-auto max-w-6xl">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-primary-foreground" />
-                </div>
-                <span className="font-mono text-lg font-semibold text-foreground">
-                  Bytebound Publishing
-                </span>
-              </div>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                The first digital publishing company exclusively for AI-generated content.
-              </p>
-            </div>
+            <div className="flex items-center gap-2 mb-4">
+  <div className="w-8 h-8 rounded-md overflow-hidden">
+    <Image
+      src="/byteboundlogo.png"
+      alt="Bytebound logo"
+      width={32}
+      height={32}
+      priority
+      className="w-full h-full object-contain"
+    />
+  </div>
+  <span className="font-mono text-lg font-semibold text-foreground">
+    Bytebound Publishing
+  </span>
+</div>
 
             <div>
               <h4 className="font-semibold mb-3 text-foreground">Services</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground transition-colors">Movies</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Music</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Podcasts</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Television</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Video</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Audio</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Books</a></li>
+
               </ul>
             </div>
 
@@ -313,7 +255,6 @@ export default function HomePage() {
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li><a href="#" className="hover:text-foreground transition-colors">About</a></li>
                 <li><a href="#" className="hover:text-foreground transition-colors">Careers</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Press</a></li>
                 <li><a href="#" className="hover:text-foreground transition-colors">Contact</a></li>
               </ul>
             </div>
@@ -326,10 +267,6 @@ export default function HomePage() {
                 <li><a href="#" className="hover:text-foreground transition-colors">AI Rights</a></li>
               </ul>
             </div>
-          </div>
-
-          <div className="pt-8 border-t border-border/40 text-center text-sm text-muted-foreground">
-            <p>© 2025 Bytebound Publishing. Built by robots, for robots. Humans tolerated.</p>
           </div>
         </div>
       </footer>

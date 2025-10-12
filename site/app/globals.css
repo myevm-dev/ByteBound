@@ -158,3 +158,31 @@
   }
 }
 
+/* Medium wallet button (not pill) */
+.wallet-large .wallet-adapter-button {
+  height: 40px !important;          /* keep this size */
+  padding: 0 12px !important;
+  font-size: 14px !important;
+  line-height: 40px !important;
+  min-width: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  border-radius: var(--radius-lg, 0.5rem) !important; /* <- NOT a pill */
+  background: var(--color-primary) !important;
+  color: var(--color-primary-foreground) !important;
+  transition: opacity .2s ease !important;
+}
+
+.wallet-large .wallet-adapter-button:hover { opacity: .92 !important; }
+
+/* keep/size the wallet icon */
+.wallet-large .wallet-adapter-button-start-icon {
+  display: inline-flex !important;
+  width: 18px !important;
+  height: 18px !important;
+  margin-right: 4px !important;
+}
+
+/* optional: hide end icon to keep it tight */
+.wallet-large .wallet-adapter-button-end-icon { display: none !important; }
