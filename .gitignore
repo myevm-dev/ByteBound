@@ -1,6 +1,16 @@
-/site/node_modules/
-/site/.next/
-/site/.pnpm-store/
-/site/npm-debug.log*
+# root .gitignore (covers any subfolder)
+**/node_modules/
+**/.next/
+**/out/
+**/dist/
+**/build/
+**/.vercel/
+**/.turbo/
+**/.pnpm-store/
+**/npm-debug.log*
+**/yarn-debug.log*
+**/pnpm-debug.log*
 *.log
-.env*
+.env
+.env.*
+!**/.env.example
