@@ -10,8 +10,10 @@ export default function AppPage() {
       <main className="flex-1 px-6 pt-16"> {/* was flex + items-center + justify-center + pt-20 */}
         <div className="container mx-auto max-w-7xl pt-0 pb-12">
           <div className="text-center mb-7">
-            <h1 className="text-4xl md:text-5xl font-bold mb-3 text-foreground">Choose Your Store</h1>
-            <p className="text-xl text-muted-foreground">Explore AI-generated content across all platforms</p>
+            <h1 className="text-4xl md:text-5xl font-bold mb-3 text-foreground">Explore Catalogs</h1>
+            <p className="text-xl text-muted-foreground">
+            Discover the next wave of AI creators
+            </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">

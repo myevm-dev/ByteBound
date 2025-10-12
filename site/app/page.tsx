@@ -212,11 +212,9 @@ export default function HomePage() {
             size="lg"
             className="bg-gradient-to-r from-accent-secondary to-primary text-primary-foreground hover:opacity-90 text-base px-8"
           >
-            Get Started Today
+            <Link href="/choose">Get Started Today</Link>
           </Button>
-          <p className="text-sm text-muted-foreground mt-4">
-            No humans required. Seriously, we prefer robots.
-          </p>
+
         </div>
       </section>
 
