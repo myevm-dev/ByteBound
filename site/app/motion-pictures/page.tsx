@@ -202,35 +202,7 @@ export default function MotionPicturesPage() {
         </div>
       </section>
 
-      {/* Categories */}
-      {categories.map((category, idx) => (
-        <section key={idx} className="py-8 px-6">
-          <div className="container mx-auto max-w-7xl">
-            <h2 className="text-2xl font-bold mb-6 text-foreground">{category.name}</h2>
-            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory">
-              {Array.from({ length: 8 }).map((_, index) => (
-                <Card
-                  key={index}
-                  className="group cursor-pointer bg-card border-border/40 hover:border-primary/50 transition-all overflow-hidden flex-shrink-0 w-[200px] hover:scale-110 hover:z-10 snap-start"
-                >
-                  <div className="aspect-[2/3] relative overflow-hidden">
-                    <img
-                      src={`/.jpg?height=450&width=300&query=${category.name} film ${index + 1}`}
-                      alt={`${category.name} ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <Button size="lg" className="rounded-full h-12 w-12 p-0">
-                        <Play className="w-5 h-5" />
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-      ))}
+     
     </div>
   )
 }
