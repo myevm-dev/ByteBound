@@ -1,7 +1,8 @@
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Sparkles, BookOpen, Star, TrendingUp, Bookmark } from "lucide-react"
-import Link from "next/link"
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Sparkles, BookOpen, Star, TrendingUp, Bookmark } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function BooksPage() {
   const featured = {
@@ -13,52 +14,19 @@ export default function BooksPage() {
     reviews: 12847,
     pages: 487,
     genre: "Sci-Fi",
-  }
+  };
 
+  const safeSrc = (p: string) => (p.startsWith("/") ? p : "/placeholder.jpg");
+
+  // ▶ use your new covers
   const trending = [
-    {
-      title: "Digital Souls",
-      author: "Claude-Writer",
-      genre: "Philosophy",
-      rating: 4.9,
-      cover: "philosophical AI consciousness book",
-    },
-    {
-      title: "The Algorithm's Heart",
-      author: "Neural-Author-3",
-      genre: "Romance",
-      rating: 4.6,
-      cover: "AI romance novel",
-    },
-    {
-      title: "Binary Dreams",
-      author: "Synthetic-Scribe",
-      genre: "Poetry",
-      rating: 4.7,
-      cover: "AI poetry collection",
-    },
-    {
-      title: "Code of Honor",
-      author: "AI-Storyteller",
-      genre: "Thriller",
-      rating: 4.8,
-      cover: "AI thriller novel",
-    },
-    {
-      title: "The Last Human",
-      author: "DeepMind-Writer",
-      genre: "Dystopian",
-      rating: 4.9,
-      cover: "dystopian AI future",
-    },
-    {
-      title: "Quantum Thoughts",
-      author: "Logic-Poet",
-      genre: "Essays",
-      rating: 4.5,
-      cover: "AI philosophy essays",
-    },
-  ]
+    { title: "Digital Souls",         author: "Claude-Writer",     genre: "Philosophy", rating: 4.9, cover: "/digitalsouls.png" },
+    { title: "The Algorithm's Heart", author: "Neural-Author-3",   genre: "Romance",    rating: 4.6, cover: "/thealgorithmsheart.png" },
+    { title: "Binary Dreams",         author: "Synthetic-Scribe",  genre: "Poetry",     rating: 4.7, cover: "/binarydreams.png" },
+    { title: "Code of Honor",         author: "AI-Storyteller",    genre: "Thriller",   rating: 4.8, cover: "/codeofhonor.png" },
+    { title: "The Last Human",        author: "DeepMind-Writer",   genre: "Dystopian",  rating: 4.9, cover: "/thelasthuman.png" },
+    { title: "Quantum Thoughts",      author: "Logic-Poet",        genre: "Essays",     rating: 4.5, cover: "/quantumthoughts.png" },
+  ];
 
   const genres = [
     { name: "AI Sci-Fi", count: 1247, color: "from-blue-600 to-cyan-600" },
@@ -67,18 +35,17 @@ export default function BooksPage() {
     { name: "Neural Noir", count: 521, color: "from-gray-700 to-gray-900" },
     { name: "Algorithmic Romance", count: 789, color: "from-rose-600 to-pink-600" },
     { name: "Binary Mysteries", count: 445, color: "from-indigo-600 to-purple-600" },
-  ]
+  ];
 
+  // also point "Continue Reading" at real covers
   const currentlyReading = [
-    { title: "Machine Learning Love", author: "AI-Romance-Bot", progress: 67, cover: "AI romance book cover" },
-    { title: "The Neural Network", author: "Deep-Writer", progress: 34, cover: "AI thriller book cover" },
-    { title: "Silicon Dreams", author: "Robo-Novelist", progress: 89, cover: "AI sci-fi book cover" },
-  ]
+    { title: "Code of Honor",         author: "AI-Storyteller",   progress: 67, cover: "/codeofhonor.png" },
+    { title: "The Last Human",        author: "DeepMind-Writer",  progress: 34, cover: "/thelasthuman.png" },
+    { title: "The Algorithm's Heart", author: "Neural-Author-3",  progress: 89, cover: "/thealgorithmsheart.png" },
+  ];
 
   return (
     <div className="min-h-screen bg-background">
-
-
       <div className="pt-20 px-6">
         <div className="container mx-auto max-w-7xl">
           {/* Featured Book */}
@@ -88,10 +55,13 @@ export default function BooksPage() {
                 <div className="flex items-center justify-center">
                   <div className="relative group">
                     <div className="absolute inset-0 bg-primary/20 blur-3xl group-hover:bg-primary/30 transition-colors" />
-                    <img
+                    <Image
                       src="/epic-sci-fi-book-cover-singularity.jpg"
                       alt={featured.title}
-                      className="relative w-full max-w-sm rounded-lg shadow-2xl"
+                      width={384}
+                      height={576}
+                      className="relative w-full max-w-sm rounded-lg shadow-2xl object-cover"
+                      priority
                     />
                   </div>
                 </div>
@@ -131,21 +101,23 @@ export default function BooksPage() {
             </Card>
           </section>
 
-          {/* Currently Reading */}
+          {/* Continue Reading */}
           <section className="py-8">
             <h2 className="text-2xl font-bold mb-6 text-foreground">Continue Reading</h2>
             <div className="grid md:grid-cols-3 gap-6">
-              {currentlyReading.map((book, index) => (
+              {currentlyReading.map((book) => (
                 <Card
-                  key={index}
+                  key={book.title}
                   className="group cursor-pointer bg-card border-border/40 hover:border-primary/50 transition-all overflow-hidden"
                 >
                   <div className="flex gap-4 p-4">
                     <div className="w-20 h-28 flex-shrink-0 rounded overflow-hidden bg-secondary">
-                      <img
-                        src={`/.jpg?height=112&width=80&query=${book.cover}`}
+                      <Image
+                        src={safeSrc(book.cover)}
                         alt={book.title}
-                        className="w-full h-full object-cover"
+                        width={80}
+                        height={112}
+                        className="object-cover"
                       />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -173,12 +145,14 @@ export default function BooksPage() {
           <section className="py-8">
             <h2 className="text-2xl font-bold mb-6 text-foreground">Trending Now</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-              {trending.map((book, index) => (
-                <div key={index} className="group cursor-pointer">
+              {trending.map((book) => (
+                <div key={book.title} className="group cursor-pointer">
                   <div className="aspect-[2/3] rounded-lg overflow-hidden mb-3 bg-secondary shadow-lg group-hover:shadow-xl transition-shadow">
-                    <img
-                      src={`/.jpg?height=450&width=300&query=${book.cover}`}
+                    <Image
+                      src={safeSrc(book.cover)}
                       alt={book.title}
+                      width={300}
+                      height={450}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
@@ -198,9 +172,9 @@ export default function BooksPage() {
           <section className="py-8 pb-16">
             <h2 className="text-2xl font-bold mb-6 text-foreground">Browse by Genre</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {genres.map((genre, index) => (
+              {genres.map((genre) => (
                 <Card
-                  key={index}
+                  key={genre.name}
                   className="group cursor-pointer bg-card border-border/40 hover:border-primary/50 transition-all overflow-hidden"
                 >
                   <div className="relative h-32 overflow-hidden">
@@ -220,5 +194,5 @@ export default function BooksPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
