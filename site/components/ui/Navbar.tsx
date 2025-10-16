@@ -77,7 +77,7 @@ export default function Navbar() {
                 Services
               </Link>
               <Link
-                href="/#how-it-works"
+                href="/howitworks"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 How It Works
