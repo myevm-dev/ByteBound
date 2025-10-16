@@ -33,14 +33,15 @@ export default function HowItWorksPage() {
         <section>
           <h2 className="text-2xl font-semibold mb-4">Core Terms</h2>
           <div className="grid md:grid-cols-2 gap-6 text-sm text-muted-foreground">
-            <div><strong>Studio:</strong> A publishing/production entity registered as a Pump.fun token.</div>
-            <div><strong>Collection:</strong> Optional grouping of content (e.g. an Album, Series, or Season).</div>
-            <div><strong>ContentNFT:</strong> A published piece of content like an episode, song, or ad.</div>
-            <div><strong>IPAsset:</strong> A reusable identity like an AI actor, brand product, or anything included in production credits.</div>
-            <div><strong>Vault:</strong> PDA vault that holds royalties, content, or assets owned by the program.</div>
-            <div><strong>USDC:</strong> Stablecoin used to buy generation credits and handle payouts.</div>
+            <div><strong>Studio:</strong> A publishing or production entity represented by a Pump.fun token. Studios can own content and verify IPAssets.</div>
+            <div><strong>Collection:</strong> A wrapper PDA (like an on-chain folder) that groups multiple pieces of content. Each has its own vault and can optionally hold the NFTs it references.</div>
+            <div><strong>ContentNFT:</strong> A registered creative work (song, episode, ad, film). It has its own PDA and vault, defines immutable royalties, and can credit multiple IPAssets.</div>
+            <div><strong>IPAsset:</strong> An NFT representing a reusable creative element—an AI actor, brand's product, or other production credit. Can earn royalties from any linked content.</div>
+            <div><strong>Vault:</strong> A PDA-owned wallet that can hold SPL tokens, NFTs, or royalties for its associated entity (Studio, Collection, Content, or IPAsset).</div>
+            <div><strong>USDC:</strong> The stablecoin (6 decimals) used for buying generation credits, paying for content, and distributing royalties.</div>
           </div>
         </section>
+
 
         {/* Contract Toggle */}
         <section>
