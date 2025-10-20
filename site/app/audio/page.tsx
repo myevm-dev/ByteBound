@@ -14,7 +14,7 @@ export default function AudioPage() {
       name: "AI Hits 2025",
       description: "The hottest AI-generated tracks",
       color: "from-purple-600 to-blue-600",
-      cover: "/now-playing-album-cover.jpg",
+      cover: "/placeholder.jpg",
     },
     {
       name: "Synthetic Chill",

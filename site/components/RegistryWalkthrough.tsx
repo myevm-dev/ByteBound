@@ -17,7 +17,7 @@ export default function RegistryWalkthrough() {
       {/* 1) Generation Credits */}
       <AccordionItem value="generation-credits">
         <AccordionTrigger>
-          <PinkNum n={1} /> <span>Generation Credits</span>
+          <PinkNum n={1} /> <span>Generation Credits Functions</span>
         </AccordionTrigger>
         <AccordionContent>
           <p className="mb-2 text-muted-foreground">
@@ -25,10 +25,10 @@ export default function RegistryWalkthrough() {
             then spend credits during AI generation.
           </p>
 
-          <SubTitle>Preflight</SubTitle>
+          <SubTitle>Client Notes</SubTitle>
           <ul className="list-disc pl-6 text-sm text-muted-foreground">
             <li>USDC mint: <code>external::TEST_USDC_MINT</code></li>
-            <li>Ensure ATAs exist (client-side idempotent create):
+            <li>Idempotent-create ATAs (client-side):
               <ul className="list-disc pl-6">
                 <li>User USDC ATA: owner = user, mint = TEST_USDC_MINT</li>
                 <li>Treasury USDC ATA: owner = <code>external::BYTEBOUND_TREASURY</code>, mint = TEST_USDC_MINT</li>
@@ -54,17 +54,16 @@ spend_generation_credits(credits: u64)
       {/* 2) Studio */}
       <AccordionItem value="studio">
         <AccordionTrigger>
-          <PinkNum n={2} /> <span>Studio</span>
+          <PinkNum n={2} /> <span>Studio Functions</span>
         </AccordionTrigger>
         <AccordionContent>
           <p className="mb-2 text-muted-foreground">
             A Studio is registered against a provided token mint (e.g. Pump.fun). Verification enforces a token stake.
           </p>
 
-          <SubTitle>Preflight</SubTitle>
+          <SubTitle>Client Notes</SubTitle>
           <ul className="list-disc pl-6 text-sm text-muted-foreground">
-            
-            <li>Before <code>verify_studio</code>:
+            <li><strong>Before</strong> calling <code>verify_studio</code>:
               <ul className="list-disc pl-6">
                 <li>Creator holds ≥ <code>40,000,000 × 10^mint.decimals</code> of the studio token</li>
                 <li>ATAs exist: <code>creator_ata</code> and <code>treasury_ata</code> for the studio mint</li>
@@ -90,7 +89,7 @@ verify_studio(metadata_uri: String)
       {/* 3) IPAsset */}
       <AccordionItem value="ip-asset">
         <AccordionTrigger>
-          <PinkNum n={3} /> <span>IPAsset (NFT Registry + PDA Vault + Fee + Withdraw)</span>
+          <PinkNum n={3} /> <span>IPAsset NFT Functions</span>
         </AccordionTrigger>
         <AccordionContent>
           <p className="mb-2 text-muted-foreground">
@@ -101,6 +100,12 @@ verify_studio(metadata_uri: String)
           <ul className="list-disc pl-6 text-sm text-muted-foreground">
             <li>State PDA: <code>["ip-asset", ip_mint]</code> → <code>IpAssetAccount</code></li>
             <li>Vault authority PDA: <code>["ip-vault", ip_mint]</code> → stored in <code>ip_asset.vault_authority</code></li>
+          </ul>
+
+          <SubTitle>Client Notes</SubTitle>
+          <ul className="list-disc pl-6 text-sm text-muted-foreground">
+            <li>Create any needed ATAs owned by <code>vault_authority</code> with <code>allowOwnerOffCurve=true</code>.</li>
+            <li>FEE constant is in lamports; adjust UI copy accordingly.</li>
           </ul>
 
           <SubTitle>Contract Functions</SubTitle>
@@ -115,19 +120,13 @@ withdraw_ip_asset_royalties(amount: u64)
 - require(caller == ip_asset.owner)
 - require(vault_ata.owner == vault_authority && vault_ata.mint == recipient_ata.mint)
 - Program signs with PDA(["ip-vault", ip_mint]) to transfer 'amount'`}</pre>
-
-          <SubTitle>Client Notes</SubTitle>
-          <ul className="list-disc pl-6 text-sm text-muted-foreground">
-            <li>Create ATA owned by <code>vault_authority</code> with <code>allowOwnerOffCurve=true</code> for any SPL mint you’ll receive.</li>
-            <li>FEE constant is in lamports; adjust UI copy accordingly.</li>
-          </ul>
         </AccordionContent>
       </AccordionItem>
 
       {/* 4) Content */}
       <AccordionItem value="content">
         <AccordionTrigger>
-          <PinkNum n={4} /> <span>ContentNFT (Registry + PDA Vault + Link IP + Fee + Withdraw)</span>
+          <PinkNum n={4} /> <span>Content NFT Functions</span>
         </AccordionTrigger>
         <AccordionContent>
           <p className="mb-2 text-muted-foreground">
@@ -138,6 +137,13 @@ withdraw_ip_asset_royalties(amount: u64)
           <ul className="list-disc pl-6 text-sm text-muted-foreground">
             <li>State PDA: <code>["content", content_mint]</code> → <code>ContentAccount</code></li>
             <li>Vault authority PDA: <code>["content-vault", content_mint]</code> → stored in <code>content.vault_authority</code></li>
+          </ul>
+
+          <SubTitle>Client Notes</SubTitle>
+          <ul className="list-disc pl-6 text-sm text-muted-foreground">
+            <li>Idempotent-create <code>vault_ata</code> with <code>allowOwnerOffCurve=true</code> for any SPL mint you’ll receive.</li>
+            <li>FEE constant is in lamports; reflect in UI.</li>
+            <li>On-chain vector sizing: default reserves space for ~10 IP links (see <code>ContentAccount::SIZE</code>).</li>
           </ul>
 
           <SubTitle>Contract Functions</SubTitle>
@@ -157,20 +163,13 @@ withdraw_content_royalties(amount: u64)
 - require(caller == content.owner)
 - require(vault_ata.owner == vault_authority && vault_ata.mint == recipient_ata.mint)
 - PDA(["content-vault", content_mint]) signs and transfers 'amount'`}</pre>
-
-          <SubTitle>Client Notes</SubTitle>
-          <ul className="list-disc pl-6 text-sm text-muted-foreground">
-            <li>Create <code>vault_ata</code> with <code>allowOwnerOffCurve=true</code>.</li>
-            <li>FEE constant is in lamports; reflect in UI.</li>
-            <li>Budget account size: default reserves space for ~10 IP links (see <code>ContentAccount::SIZE</code>).</li>
-          </ul>
         </AccordionContent>
       </AccordionItem>
 
       {/* 5) Collection */}
       <AccordionItem value="collection">
         <AccordionTrigger>
-          <PinkNum n={5} /> <span>Collection (Wrapper + PDA Vault + Fee + Withdraw)</span>
+          <PinkNum n={5} /> <span>Collection Functions</span>
         </AccordionTrigger>
         <AccordionContent>
           <p className="mb-2 text-muted-foreground">
@@ -181,6 +180,13 @@ withdraw_content_royalties(amount: u64)
           <ul className="list-disc pl-6 text-sm text-muted-foreground">
             <li>State PDA: <code>["collection", collection_mint]</code> → <code>CollectionAccount</code></li>
             <li>Vault authority PDA: <code>["collection-vault", collection_mint]</code> → stored in <code>collection.vault_authority</code></li>
+          </ul>
+
+          <SubTitle>Client Notes</SubTitle>
+          <ul className="list-disc pl-6 text-sm text-muted-foreground">
+            <li>Create <code>vault_ata</code> with <code>allowOwnerOffCurve=true</code>.</li>
+            <li>To “hold” a Content NFT in the Collection, create the ATA owned by the Collection vault for the Content NFT mint and send 1 token there.</li>
+            <li>FEE constant is in lamports; reflect in UI.</li>
           </ul>
 
           <SubTitle>Contract Functions</SubTitle>
@@ -195,34 +201,15 @@ withdraw_collection_assets(amount: u64)
 - require(caller == collection.owner)
 - require(vault_ata.owner == vault_authority && vault_ata.mint == recipient_ata.mint)
 - PDA(["collection-vault", collection_mint]) signs and transfers 'amount'`}</pre>
-
-          <SubTitle>Client Notes</SubTitle>
-          <ul className="list-disc pl-6 text-sm text-muted-foreground">
-            <li>Create <code>vault_ata</code> with <code>allowOwnerOffCurve=true</code>.</li>
-            <li>To “hold” a Content NFT in the Collection, create the ATA owned by the Collection vault for the Content NFT mint and send 1 token there.</li>
-            <li>FEE constant is in lamports; reflect in UI.</li>
-          </ul>
         </AccordionContent>
       </AccordionItem>
 
-      {/* 6) Admin & Close */}
-      <AccordionItem value="admin">
-        <AccordionTrigger>
-          <PinkNum n={6} /> <span>Admin & Close</span>
-        </AccordionTrigger>
-        <AccordionContent>
-          <ul className="list-disc pl-6 text-sm text-muted-foreground">
-            <li><code>initialize_registry</code>: sets <code>admin</code>, <code>usdc_mint=external::TEST_USDC_MINT</code>, <code>treasury=external::BYTEBOUND_TREASURY</code>.</li>
-            <li><code>close_user_credits</code>: balance must be 0; closes PDA to recipient.</li>
-            <li><code>close_registry_config</code>: admin-only; closes config to recipient.</li>
-          </ul>
-        </AccordionContent>
-      </AccordionItem>
+      
 
-      {/* 7) Common Rules & Gotchas */}
+      {/* 6) Common Rules & Gotchas */}
       <AccordionItem value="rules">
         <AccordionTrigger>
-          <PinkNum n={7} /> <span>Common Rules & Gotchas</span>
+          <PinkNum n={6} /> <span>Common Rules & Gotchas</span>
         </AccordionTrigger>
         <AccordionContent>
           <ul className="list-disc pl-6 text-sm text-muted-foreground">
