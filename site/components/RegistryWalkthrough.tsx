@@ -2,23 +2,33 @@
 
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
 
+const PinkNum = ({ n }: { n: number }) => (
+  <span className="text-pink-500 font-semibold mr-2">{n}.</span>
+)
+
+const SubTitle = ({ children }: { children: React.ReactNode }) => (
+  <h4 className="font-semibold mt-4 mb-1 text-sm text-cyan-400">{children}</h4>
+)
+
 export default function RegistryWalkthrough() {
   return (
     <Accordion type="multiple" className="space-y-4">
-      
-      {/* 1. Generation Credits */}
+
+      {/* 1) Generation Credits */}
       <AccordionItem value="generation-credits">
-        <AccordionTrigger>1. Generation Credits</AccordionTrigger>
+        <AccordionTrigger>
+          <PinkNum n={1} /> <span>Generation Credits</span>
+        </AccordionTrigger>
         <AccordionContent>
           <p className="mb-2 text-muted-foreground">
-            Users buy and spend internal credits (denominated in USDC, 6 decimals) to generate AI content on Bytebound.
+            Credits are internal units backed by USDC (6 decimals). Users buy credits by transferring USDC to the treasury,
+            then spend credits during AI generation.
           </p>
 
-          <h4 className="font-semibold mt-4 mb-1 text-sm">Preflight</h4>
+          <SubTitle>Preflight</SubTitle>
           <ul className="list-disc pl-6 text-sm text-muted-foreground">
-            <li>User wallet holds USDC (mint: <code>external::TEST_USDC_MINT</code>)</li>
-            <li>1 credit = 1 micro-USDC (i.e., credits are raw USDC smallest units)</li>
-            <li>Ensure ATAs exist:
+            <li>USDC mint: <code>external::TEST_USDC_MINT</code></li>
+            <li>Ensure ATAs exist (client-side idempotent create):
               <ul className="list-disc pl-6">
                 <li>User USDC ATA: owner = user, mint = TEST_USDC_MINT</li>
                 <li>Treasury USDC ATA: owner = <code>external::BYTEBOUND_TREASURY</code>, mint = TEST_USDC_MINT</li>
@@ -26,163 +36,203 @@ export default function RegistryWalkthrough() {
             </li>
           </ul>
 
-          <h4 className="font-semibold mt-4 mb-1 text-sm">Contract Functions</h4>
-          <pre className="bg-muted p-4 rounded text-sm text-muted-foreground">
-{`buy_generation_credits(credits: u64):
+          <SubTitle>Contract Functions</SubTitle>
+          <pre className="bg-muted p-4 rounded text-sm text-muted-foreground whitespace-pre-wrap">{`buy_generation_credits(credits: u64)
 - CPI: token::transfer user_usdc_ata → treasury_usdc_ata for 'credits'
-- Initializes/updates UserCredits PDA [\"user-credits\", user]
-- Sets user_credits.user, bump; adds 'credits' to balance
-- Emits CreditsPurchased { user, amount, mint, to }
+- init_if_needed UserCredits PDA ["user-credits", user]
+- user_credits.balance += credits
+- Emits CreditsPurchased { user, amount, mint=TEST_USDC_MINT, to=treasury_ata }
 
-spend_generation_credits(credits: u64):
-- Checks signer matches user_credits.user; requires balance ≥ credits
-- Decrements balance by 'credits'
-- Emits CreditsSpent { user, amount }`}
-          </pre>
+spend_generation_credits(credits: u64)
+- require(user_credits.user == signer)
+- require(balance ≥ credits)
+- user_credits.balance -= credits
+- Emits CreditsSpent { user, amount }`}</pre>
         </AccordionContent>
       </AccordionItem>
 
-      {/* 2. Studio */}
+      {/* 2) Studio */}
       <AccordionItem value="studio">
-        <AccordionTrigger>2. Studio</AccordionTrigger>
+        <AccordionTrigger>
+          <PinkNum n={2} /> <span>Studio</span>
+        </AccordionTrigger>
         <AccordionContent>
           <p className="mb-2 text-muted-foreground">
-            Studios are registered against a provided SPL token mint (e.g., a Pump.fun token). Verification later locks in a token stake.
+            A Studio is registered against a provided token mint (e.g. Pump.fun). Verification enforces a token stake.
           </p>
 
-          <h4 className="font-semibold mt-4 mb-1 text-sm">Preflight</h4>
+          <SubTitle>Preflight</SubTitle>
           <ul className="list-disc pl-6 text-sm text-muted-foreground">
-            <li>Have the studio token mint address ready (passed into <code>register_studio</code>)</li>
-            <li>Creator wallet must have &ge; 1 SOL (for <code>register_studio</code> fee to treasury)</li>
-            <li>Before calling <code>verify_studio</code>:
+            <li><code>register_studio</code> transfers <strong>1&nbsp;SOL</strong> (system transfer) from <em>creator</em> → <code>external::BYTEBOUND_TREASURY</code></li>
+            <li>Before <code>verify_studio</code>:
               <ul className="list-disc pl-6">
-                <li>Creator holds &ge; 40,000,000 × 10<sup>decimals</sup> tokens in their ATA</li>
-                <li>Create the <strong>treasury ATA</strong> for this mint (owner = <code>external::BYTEBOUND_TREASURY</code>, allowOwnerOffCurve = true)</li>
+                <li>Creator holds ≥ <code>40,000,000 × 10^mint.decimals</code> of the studio token</li>
+                <li>ATAs exist: <code>creator_ata</code> and <code>treasury_ata</code> for the studio mint</li>
+                <li>Signers: <em>admin</em> (verifier) and <em>creator</em> (token authority)</li>
               </ul>
             </li>
           </ul>
 
-          <h4 className="font-semibold mt-4 mb-1 text-sm">Contract Functions</h4>
-          <pre className="bg-muted p-4 rounded text-sm text-muted-foreground">
-{`register_studio(mint: Pubkey):
-- Transfers 1 SOL from creator → BYTEBOUND_TREASURY
-- Creates StudioAccount PDA [\"studio\", mint] with { creator, token_mint=mint, verified=false, bump }
-- No SPL tokens moved here
+          <SubTitle>Contract Functions</SubTitle>
+          <pre className="bg-muted p-4 rounded text-sm text-muted-foreground whitespace-pre-wrap">{`register_studio(mint: Pubkey)
+- System transfer: 1 SOL creator → BYTEBOUND_TREASURY
+- Init StudioAccount PDA ["studio", mint] with { creator, token_mint=mint, verified=false, bump }
 
-verify_studio(metadata_uri: String):
-- Admin-only (signer must equal config.admin)
-- Computes amount = 40,000,000 × 10^mint.decimals
-- CPI: token::transfer creator_ata → treasury_ata for 'amount'
-- Sets studio_account.verified = true
-- Emits StudioVerified { studio, verified_by, metadata_uri }
-- Requires pre-existing ATAs:
-  - creator_ata (owner = creator, mint = studio token)
-  - treasury_ata (owner = BYTEBOUND_TREASURY, mint = studio token, off-curve allowed)`}
-          </pre>
+verify_studio(metadata_uri: String)
+- (Optional) check admin == config.admin (commented in code)
+- Compute stake = 40,000,000 × 10^mint.decimals
+- CPI: token::transfer creator_ata → treasury_ata for 'stake'
+- studio_account.verified = true
+- Emits StudioVerified { studio, verified_by=admin, metadata_uri }`}</pre>
         </AccordionContent>
       </AccordionItem>
 
-           {/* 3. Collection */}
-      <AccordionItem value="collection">
-        <AccordionTrigger>3. Collection (Album, Series, Anthology, Franchise)</AccordionTrigger>
-        <AccordionContent>
-          <p className="mb-2 text-muted-foreground">
-            A Collection is a wrapper PDA with its own vault that can hold or reference multiple ContentNFTs. 
-            It behaves like an on-chain folder or franchise container, useful for grouping works.
-          </p>
-
-          <h4 className="font-semibold mt-4 mb-1 text-sm">Preflight</h4>
-          <ul className="list-disc pl-6 text-sm text-muted-foreground">
-            <li>Mint a Metaplex NFT to represent the collection (album, season, franchise)</li>
-            <li>Assign title, description, and artwork metadata</li>
-            <li>Optionally create a verified Metaplex collection for UX consistency</li>
-          </ul>
-
-          <h4 className="font-semibold mt-4 mb-1 text-sm">Contract Functions</h4>
-          <pre className="bg-muted p-4 rounded text-sm text-muted-foreground whitespace-pre-wrap">
-{`register_collection(collection_mint, name, uri, type)
-- Creates CollectionAccount PDA ["collection", collection_mint]
-- Creates CollectionVault PDA ["collection-vault", collection_mint]
-- Stores metadata fields and creator authority
-
-link_content_to_collection(collection, content)
-- Creates link PDA ["collection-content", collection, content]
-- Optionally transfers content NFT → collection vault
-
-unlink_content_from_collection(...)
-- Closes link PDA (removes reference or NFT from vault)`}
-          </pre>
-        </AccordionContent>
-      </AccordionItem>
-
-      {/* 4. ContentNFT */}
-      <AccordionItem value="content-nft">
-        <AccordionTrigger>4. ContentNFT (Published Work — Song, Ad, Film)</AccordionTrigger>
-        <AccordionContent>
-          <p className="mb-2 text-muted-foreground">
-            A ContentNFT represents an individual creative work. 
-            It can declare production credits (linked IPAssets), assign immutable royalty splits, and belong to a Collection.
-          </p>
-
-          <h4 className="font-semibold mt-4 mb-1 text-sm">Preflight</h4>
-          <ul className="list-disc pl-6 text-sm text-muted-foreground">
-            <li>Mint or reference an existing Metaplex NFT</li>
-            <li>Prepare metadata URI (title, release date, media links)</li>
-            <li>Optionally include an array of IPAssets as production credits</li>
-          </ul>
-
-          <h4 className="font-semibold mt-4 mb-1 text-sm">Contract Functions</h4>
-          <pre className="bg-muted p-4 rounded text-sm text-muted-foreground whitespace-pre-wrap">
-{`register_content(content_mint, metadata_uri, use_ip_assets[])
-- Creates ContentAccount PDA ["content", content_mint]
-- Creates ContentVault PDA ["content-vault", content_mint]
-- Optionally links IPAssets declared in use_ip_assets[]
-- Stores royalty map (immutable after publish)
-
-link_ip_to_content(content, ip)
-- Adds production credit (creates ["content-ip", content, ip] link)
-
-unlink_ip_from_content(content, ip)
-- Removes credit (closes link account)
-
-set_royalty_distribution(recipients[], bps[])
-- Immutable after publish
-
-publish_content()
-- Locks metadata + royalty map; marks content as “live”`}
-          </pre>
-        </AccordionContent>
-      </AccordionItem>
-
-      {/* 5. IPAsset */}
+      {/* 3) IPAsset */}
       <AccordionItem value="ip-asset">
-        <AccordionTrigger>5. IPAsset (Actor, Brand, Voice, Product, etc.)</AccordionTrigger>
+        <AccordionTrigger>
+          <PinkNum n={3} /> <span>IPAsset (NFT Registry + PDA Vault + Fee + Withdraw)</span>
+        </AccordionTrigger>
         <AccordionContent>
           <p className="mb-2 text-muted-foreground">
-            IPAssets are reusable creative NFTs that act as production credits and royalty recipients across multiple contents or collections.
+            Registers an existing Metaplex NFT mint as an IPAsset. The program derives a vault-authority PDA per mint to own ATAs.
           </p>
 
-          <h4 className="font-semibold mt-4 mb-1 text-sm">Preflight</h4>
+          <SubTitle>Derivations</SubTitle>
           <ul className="list-disc pl-6 text-sm text-muted-foreground">
-            <li>Mint a Metaplex NFT for the IP identity</li>
-            <li>Assign metadata URI (name, role, visuals)</li>
-            <li>Define default royalty share (basis points)</li>
+            <li>State PDA: <code>["ip-asset", ip_mint]</code> → <code>IpAssetAccount</code></li>
+            <li>Vault authority PDA: <code>["ip-vault", ip_mint]</code> → stored in <code>ip_asset.vault_authority</code></li>
           </ul>
 
-          <h4 className="font-semibold mt-4 mb-1 text-sm">Contract Functions</h4>
-          <pre className="bg-muted p-4 rounded text-sm text-muted-foreground whitespace-pre-wrap">
-{`register_ip_asset(ip_mint, role, default_bps, uri)
-- Creates IPAssetAccount PDA ["ip-asset", ip_mint]
-- Creates IPVault PDA ["ip-vault", ip_mint]
-- Stores creator, metadata_uri, default royalty rate
+          <SubTitle>Contract Functions</SubTitle>
+          <pre className="bg-muted p-4 rounded text-sm text-muted-foreground whitespace-pre-wrap">{`register_ip_asset()    // ip_mint passed as ACCOUNT
+- require: studio for 'studio_mint' is verified (pass studio_mint + ["studio", studio_mint] PDA)
+- System transfer: pay_treasury(owner → BYTEBOUND_TREASURY, amount = FEE_IP_ASSET)
+- Init IpAssetAccount PDA ["ip-asset", ip_mint]
+- Derive & store vault_authority = PDA(["ip-vault", ip_mint])
+- Emits IpAssetRegistered { owner, ip_mint, vault_authority }
 
-link_ip_asset_to_studio(studio)
-- Associates this IP with a registered Studio
+withdraw_ip_asset_royalties(amount: u64)
+- require(caller == ip_asset.owner)
+- require(vault_ata.owner == vault_authority && vault_ata.mint == recipient_ata.mint)
+- Program signs with PDA(["ip-vault", ip_mint]) to transfer 'amount'`}</pre>
 
-verify_ip_asset(verified: bool)
-- Admin or studio-verifier marks authenticity
-- Used for verified AI agents, brands, or creators`}
-          </pre>
+          <SubTitle>Client Notes</SubTitle>
+          <ul className="list-disc pl-6 text-sm text-muted-foreground">
+            <li>Create ATA owned by <code>vault_authority</code> with <code>allowOwnerOffCurve=true</code> for any SPL mint you’ll receive.</li>
+            <li>FEE constant is in lamports; adjust UI copy accordingly.</li>
+          </ul>
+        </AccordionContent>
+      </AccordionItem>
+
+      {/* 4) Content */}
+      <AccordionItem value="content">
+        <AccordionTrigger>
+          <PinkNum n={4} /> <span>ContentNFT (Registry + PDA Vault + Link IP + Fee + Withdraw)</span>
+        </AccordionTrigger>
+        <AccordionContent>
+          <p className="mb-2 text-muted-foreground">
+            Registers a Content NFT (song, ad, film, episode). Each Content has a vault-authority PDA and can link many IPAssets.
+          </p>
+
+          <SubTitle>Derivations</SubTitle>
+          <ul className="list-disc pl-6 text-sm text-muted-foreground">
+            <li>State PDA: <code>["content", content_mint]</code> → <code>ContentAccount</code></li>
+            <li>Vault authority PDA: <code>["content-vault", content_mint]</code> → stored in <code>content.vault_authority</code></li>
+          </ul>
+
+          <SubTitle>Contract Functions</SubTitle>
+          <pre className="bg-muted p-4 rounded text-sm text-muted-foreground whitespace-pre-wrap">{`register_content()     // content_mint as ACCOUNT
+- require: studio verified (pass studio_mint + ["studio", studio_mint] PDA)
+- System transfer: pay_treasury(owner → BYTEBOUND_TREASURY, amount = FEE_CONTENT)
+- Init ContentAccount PDA ["content", content_mint] { ip_assets: Vec::new(), ... }
+- Derive & store vault_authority = PDA(["content-vault", content_mint])
+- Emits ContentRegistered { owner, content_mint, vault_authority }
+
+link_ip_asset_to_content()
+- require(caller == content.owner)
+- De-dup push IpAssetAccount PDA into content.ip_assets
+- Emits IpLinkedToContent { content_pda, ip_pda }
+
+withdraw_content_royalties(amount: u64)
+- require(caller == content.owner)
+- require(vault_ata.owner == vault_authority && vault_ata.mint == recipient_ata.mint)
+- PDA(["content-vault", content_mint]) signs and transfers 'amount'`}</pre>
+
+          <SubTitle>Client Notes</SubTitle>
+          <ul className="list-disc pl-6 text-sm text-muted-foreground">
+            <li>Create <code>vault_ata</code> with <code>allowOwnerOffCurve=true</code>.</li>
+            <li>FEE constant is in lamports; reflect in UI.</li>
+            <li>Budget account size: default reserves space for ~10 IP links (see <code>ContentAccount::SIZE</code>).</li>
+          </ul>
+        </AccordionContent>
+      </AccordionItem>
+
+      {/* 5) Collection */}
+      <AccordionItem value="collection">
+        <AccordionTrigger>
+          <PinkNum n={5} /> <span>Collection (Wrapper + PDA Vault + Fee + Withdraw)</span>
+        </AccordionTrigger>
+        <AccordionContent>
+          <p className="mb-2 text-muted-foreground">
+            A Collection groups Content NFTs. It has a vault-authority PDA and can hold assets/NFTs via PDA-owned ATAs.
+          </p>
+
+          <SubTitle>Derivations</SubTitle>
+          <ul className="list-disc pl-6 text-sm text-muted-foreground">
+            <li>State PDA: <code>["collection", collection_mint]</code> → <code>CollectionAccount</code></li>
+            <li>Vault authority PDA: <code>["collection-vault", collection_mint]</code> → stored in <code>collection.vault_authority</code></li>
+          </ul>
+
+          <SubTitle>Contract Functions</SubTitle>
+          <pre className="bg-muted p-4 rounded text-sm text-muted-foreground whitespace-pre-wrap">{`register_collection()  // collection_mint as ACCOUNT
+- require: studio verified (pass studio_mint + ["studio", studio_mint] PDA)
+- System transfer: pay_treasury(owner → BYTEBOUND_TREASURY, amount = FEE_COLLECTION)
+- Init CollectionAccount PDA ["collection", collection_mint]
+- Derive & store vault_authority = PDA(["collection-vault", collection_mint])
+- Emits CollectionRegistered { owner, collection_mint, vault_authority }
+
+withdraw_collection_assets(amount: u64)
+- require(caller == collection.owner)
+- require(vault_ata.owner == vault_authority && vault_ata.mint == recipient_ata.mint)
+- PDA(["collection-vault", collection_mint]) signs and transfers 'amount'`}</pre>
+
+          <SubTitle>Client Notes</SubTitle>
+          <ul className="list-disc pl-6 text-sm text-muted-foreground">
+            <li>Create <code>vault_ata</code> with <code>allowOwnerOffCurve=true</code>.</li>
+            <li>To “hold” a Content NFT in the Collection, create the ATA owned by the Collection vault for the Content NFT mint and send 1 token there.</li>
+            <li>FEE constant is in lamports; reflect in UI.</li>
+          </ul>
+        </AccordionContent>
+      </AccordionItem>
+
+      {/* 6) Admin & Close */}
+      <AccordionItem value="admin">
+        <AccordionTrigger>
+          <PinkNum n={6} /> <span>Admin & Close</span>
+        </AccordionTrigger>
+        <AccordionContent>
+          <ul className="list-disc pl-6 text-sm text-muted-foreground">
+            <li><code>initialize_registry</code>: sets <code>admin</code>, <code>usdc_mint=external::TEST_USDC_MINT</code>, <code>treasury=external::BYTEBOUND_TREASURY</code>.</li>
+            <li><code>close_user_credits</code>: balance must be 0; closes PDA to recipient.</li>
+            <li><code>close_registry_config</code>: admin-only; closes config to recipient.</li>
+          </ul>
+        </AccordionContent>
+      </AccordionItem>
+
+      {/* 7) Common Rules & Gotchas */}
+      <AccordionItem value="rules">
+        <AccordionTrigger>
+          <PinkNum n={7} /> <span>Common Rules & Gotchas</span>
+        </AccordionTrigger>
+        <AccordionContent>
+          <ul className="list-disc pl-6 text-sm text-muted-foreground">
+            <li><strong className="text-cyan-400">Mint inputs are accounts, not args:</strong> <code>register_*()</code> reads <code>ip_mint/content_mint/collection_mint</code> from the account metas.</li>
+            <li><strong className="text-cyan-400">Vault ownership:</strong> The PDA is the <em>owner</em> of its ATAs. Only the program can move funds by signing with PDA seeds.</li>
+            <li><strong className="text-cyan-400">Create ATAs client-side:</strong> Always idempotent-create the destination ATA (owner = vault PDA, <code>allowOwnerOffCurve=true</code>) before deposits.</li>
+            <li><strong className="text-cyan-400">Owner gating:</strong> Withdraw calls require <code>caller == state.owner</code>.</li>
+            <li><strong className="text-cyan-400">Re-derivation checks:</strong> Handlers re-derive the expected vault PDA and compare to the passed key.</li>
+            <li><strong className="text-cyan-400">Vectors:</strong> <code>content.ip_assets</code> is stored on-chain; watch size if you expect many links.</li>
+          </ul>
         </AccordionContent>
       </AccordionItem>
     </Accordion>
