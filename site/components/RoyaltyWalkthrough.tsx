@@ -62,7 +62,7 @@ delist()
       {/* 2) Purchase (20/80 split) */}
       <AccordionItem value="purchase">
         <AccordionTrigger>
-          <PinkNum n={2} /> <span>Purchase (Content / Collection) — 20% fee to Treasury</span>
+          <PinkNum n={2} /> <span>Purchase (Content / Collection)</span>
         </AccordionTrigger>
         <AccordionContent>
           <p className="mb-2 text-muted-foreground">
@@ -91,7 +91,7 @@ delist()
       {/* 3) Rent (20/80 split) */}
       <AccordionItem value="rent">
         <AccordionTrigger>
-          <PinkNum n={3} /> <span>Rent (Content / Collection) — 20% fee to Treasury</span>
+          <PinkNum n={3} /> <span>Rent (Content / Collection)</span>
         </AccordionTrigger>
         <AccordionContent>
           <p className="mb-2 text-muted-foreground">
@@ -110,7 +110,7 @@ delist()
       {/* 4) IP Licensing (20/80 split) */}
       <AccordionItem value="ip">
         <AccordionTrigger>
-          <PinkNum n={4} /> <span>IP Licensing — 20% fee to Treasury</span>
+          <PinkNum n={4} /> <span>IP Licensing</span>
         </AccordionTrigger>
         <AccordionContent>
           <p className="mb-2 text-muted-foreground">
@@ -129,7 +129,7 @@ delist()
       {/* 5) Placement / Bounties (no fee) */}
       <AccordionItem value="placement">
         <AccordionTrigger>
-          <PinkNum n={5} /> <span>Placement / Bounties — No Treasury Fee</span>
+          <PinkNum n={5} /> <span>Placement / Advertising</span>
         </AccordionTrigger>
         <AccordionContent>
           <p className="mb-2 text-muted-foreground">

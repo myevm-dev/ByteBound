@@ -63,7 +63,7 @@ spend_generation_credits(credits: u64)
 
           <SubTitle>Preflight</SubTitle>
           <ul className="list-disc pl-6 text-sm text-muted-foreground">
-            <li><code>register_studio</code> transfers <strong>1&nbsp;SOL</strong> (system transfer) from <em>creator</em> → <code>external::BYTEBOUND_TREASURY</code></li>
+            
             <li>Before <code>verify_studio</code>:
               <ul className="list-disc pl-6">
                 <li>Creator holds ≥ <code>40,000,000 × 10^mint.decimals</code> of the studio token</li>
