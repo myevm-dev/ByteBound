@@ -34,7 +34,7 @@ export default function HowItWorksPage() {
             <div className="rounded-2xl border p-4">
               <div className="flex items-center gap-2 font-medium">
                 <PiggyBank className="w-4 h-4 text-primary" />
-                Bytebound Treasury
+                <span className="text-pink-500">Bytebound Treasury</span>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">
                 Likely DAO account that receives protocol fees. Receives USDC, SOL, and Studio Tokens.
@@ -44,7 +44,7 @@ export default function HowItWorksPage() {
             <div className="rounded-2xl border p-4">
               <div className="flex items-center gap-2 font-medium">
                 <Wrench className="w-4 h-4 text-primary" />
-                Deployer (Dev)
+                <span className="text-pink-500">Deployer (Dev)</span>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">
                 Deploys programs and initializes the Registry. The upgrade admin in early environments.
@@ -54,7 +54,7 @@ export default function HowItWorksPage() {
             <div className="rounded-2xl border p-4">
               <div className="flex items-center gap-2 font-medium">
                 <Film className="w-4 h-4 text-primary" />
-                Studio Owner
+                <span className="text-pink-500">Studio Owner</span>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">
                 Content Studio + token. Buys generation credits to create IP/Content. Lists on market.
@@ -64,7 +64,7 @@ export default function HowItWorksPage() {
             <div className="rounded-2xl border p-4">
               <div className="flex items-center gap-2 font-medium">
                 <UserIcon className="w-4 h-4 text-primary" />
-                End User
+                <span className="text-pink-500">End User</span>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">
                 Pays Studio tokens to purchase, rent, or license content and interact with creative works.
@@ -80,7 +80,7 @@ export default function HowItWorksPage() {
           {/* Row 1: Studio Token + USDC */}
           <div className="grid md:grid-cols-2 gap-4 mt-4">
             <div className="rounded-2xl border p-4">
-              <div className="font-semibold">Studio Token</div>
+              <div className="font-semibold text-pink-500">Studio Token</div>
               <p className="mt-2 text-sm text-muted-foreground">
                 SPL token launched on Pump.Fun and registered. Used for all marketplace payments
                 (purchase, rent, IP license, placement).
@@ -88,7 +88,7 @@ export default function HowItWorksPage() {
             </div>
 
             <div className="rounded-2xl border p-4">
-              <div className="font-semibold">USDC</div>
+              <div className="font-semibold text-pink-500">USDC</div>
               <p className="mt-2 text-sm text-muted-foreground">
                 Stablecoin used for buying <em>generation credits</em> in the Registry program payable to Bytebound Treasury.
               </p>
@@ -98,17 +98,17 @@ export default function HowItWorksPage() {
           {/* Row 2: ContentNFT + IPAsset */}
           <div className="grid md:grid-cols-2 gap-4 mt-4">
             <div className="rounded-2xl border p-4">
-              <div className="font-semibold">IPAsset NFT</div>
+              <div className="font-semibold text-pink-500">IPAsset NFT</div>
               <p className="mt-2 text-sm text-muted-foreground">
                 An NFT representing a reusable creative element like an AI actor, brand product,
-                artist, influencer, or other production credit. Recieves its own PDA Vault from the Registry program.
+                artist, influencer, or other production credit. Receives its own PDA Vault from the Registry program.
               </p>
             </div>
 
             <div className="rounded-2xl border p-4">
-              <div className="font-semibold">Content NFT</div>
+              <div className="font-semibold text-pink-500">Content NFT</div>
               <p className="mt-2 text-sm text-muted-foreground">
-                A registered NFT creative work (song, episode, film). Recieves its own PDA Vault from the Registry program.
+                A registered NFT creative work (song, episode, film). Receives its own PDA Vault from the Registry program.
                 It can have multiple IPAssets linked as children.
               </p>
             </div>
@@ -117,23 +117,21 @@ export default function HowItWorksPage() {
           {/* Row 3: Collection + Vault */}
           <div className="grid md:grid-cols-2 gap-4 mt-4">
             <div className="rounded-2xl border p-4">
-              <div className="font-semibold">Collection PDA</div>
+              <div className="font-semibold text-pink-500">Collection PDA</div>
               <p className="mt-2 text-sm text-muted-foreground">
-                A registered vault wrapper (album, tv series, movie trilogy ) that groups multiple pieces of content. It is a PDA Vault from the Registry program.
+                A registered vault wrapper (album, tv series, movie trilogy) that groups multiple pieces of content. It is a PDA Vault from the Registry program.
                 It can have multiple Content NFTs linked as children.
               </p>
             </div>
 
-           <div className="rounded-2xl border p-4">
-            <div className="font-semibold">Program Derived Vault</div>
-            <p className="mt-2 text-sm text-muted-foreground">
-              A <strong>vault authority PDA</strong> (for <em>Content</em>, <em>Collection</em>, or <em>IPAsset</em>) that 
-              <strong> owns the royalty-receiving token accounts (ATAs)</strong>. The PDA is registered to a specific NFT. 
-              Funds live in its ATAs, moved by PDA-signed transactions.
-
-            </p>
-          </div>
-
+            <div className="rounded-2xl border p-4">
+              <div className="font-semibold text-pink-500">Program Derived Vault</div>
+              <p className="mt-2 text-sm text-muted-foreground">
+                A <strong>vault authority PDA</strong> (for <em>Content</em>, <em>Collection</em>, or <em>IPAsset</em>) that 
+                <strong> owns the royalty-receiving token accounts (ATAs)</strong>. The PDA is registered to a specific NFT. 
+                Funds live in its ATAs, moved by PDA-signed transactions.
+              </p>
+            </div>
           </div> 
         </section>
 
