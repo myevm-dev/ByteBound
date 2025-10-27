@@ -22,8 +22,9 @@ export default function RoyaltyWalkthrough() {
         </AccordionTrigger>
         <AccordionContent>
           <p className="mb-2 text-muted-foreground">
-            Studios list registered items from the <em>Registry</em> (Content, Collection, IPAsset). The Market stores price & currency; no escrow.
-            <br />Currency is the <strong>studio token</strong> (the <code>studio_mint</code> you pass), not hardcoded USDC.
+            Studios list registered items from the <em>Registry</em> (Content, Collection, IPAsset).
+            The Market stores price &amp; currency; no escrow. Currency is the <strong>studio token</strong>
+            (<code>studio_mint</code>), not USDC.
           </p>
 
           <SubTitle>Client Notes</SubTitle>
@@ -39,22 +40,29 @@ export default function RoyaltyWalkthrough() {
             <li><strong>Studio gate:</strong> provide <code>studio_mint</code> and its Registry PDA <code>["studio", studio_mint]</code>.</li>
             <li><strong>Currency lock:</strong> <code>listing.currency_mint = studio_mint</code>. All payer/treasury/vault ATAs used later must be this mint.</li>
             <li><strong>No ATAs needed to list:</strong> ATAs are only required when paying (purchase/rent/license/placement).</li>
+            <li><strong>Unique PDAs per kind:</strong> listing seeds =
+              <code>["listing", "purchase|rental|ip|placement", target_mint, seller]</code>.
+            </li>
           </ul>
 
           <SubTitle>Contract Functions</SubTitle>
-          <pre className="bg-muted p-4 rounded text-sm text-muted-foreground whitespace-pre-wrap">{`list_content_or_collection(kind: u8, target_kind: u8, price: u64, duration_secs: u32)
-- kind: PurchaseContent | RentalContent
+          <pre className="bg-muted p-4 rounded text-sm text-muted-foreground whitespace-pre-wrap">{`list_purchase_content_or_collection(target_kind: u8, price: u64)
 - target_kind: Content | Collection
-- Verifies Registry state PDA for target + Studio PDA
-- Creates Listing { seller, kind, target_kind, target_mint, price, currency_mint = studio_mint, duration_secs, active=true }
+- Verifies target Registry PDA + Studio PDA
+- Creates Purchase listing (PDA tag = "purchase")
+
+list_rental_content_or_collection(target_kind: u8, price: u64, duration_secs: u32)
+- target_kind: Content | Collection; require(duration_secs > 0)
+- Verifies target Registry PDA + Studio PDA
+- Creates Rental listing (PDA tag = "rental")
 
 list_ip_license(price: u64)
 - Verifies IpAssetAccount PDA + Studio PDA
-- Creates Listing for IP license (currency_mint = studio_mint)
+- Creates IP license listing (PDA tag = "ip")
 
 list_placement(target_kind: u8, price: u64)
-- For Content/Collection; verifies Registry state PDA + Studio PDA
-- Creates Placement listing (bounty-style)
+- For Content/Collection; verifies target Registry PDA + Studio PDA
+- Creates Placement listing (PDA tag = "placement")
 
 delist()
 - Seller-only; sets active=false`}</pre>
@@ -64,28 +72,30 @@ delist()
       {/* 2) Purchase (20/80 split) */}
       <AccordionItem value="purchase">
         <AccordionTrigger>
-          <PinkNum n={2} /> <span>Purchase Functions (Content / Collection)</span>
+          <PinkNum n={2} /> <span>Purchase (Content / Collection)</span>
         </AccordionTrigger>
         <AccordionContent>
           <p className="mb-2 text-muted-foreground">
-            Buyer pays in the <strong>studio token</strong>. Helper splits 20% to <code>BYTEBOUND_TREASURY</code>, 80% to the Registry vault.
+            Buyer pays in the <strong>studio token</strong>. Helper splits 20% to <code>BYTEBOUND_TREASURY</code>,
+            80% to the corresponding Registry vault.
           </p>
 
           <SubTitle>Client Notes</SubTitle>
           <ul className="list-disc pl-6 text-sm text-muted-foreground">
             <li>Pass: <code>payer_ata(studio_mint)</code>, <code>treasury_ata(studio_mint, owner=BYTEBOUND_TREASURY)</code>, <code>vault_authority</code>, <code>vault_ata(studio_mint)</code>.</li>
             <li><strong>Vault ATA:</strong> create with <code>allowOwnerOffCurve=true</code> (PDA owner).</li>
+            <li><strong>Use the matching listing PDA:</strong> seeds must include <code>"purchase"</code>.</li>
           </ul>
 
-          <SubTitle>Contract Functions</SubTitle>
+          <SubTitle>Contract Flow</SubTitle>
           <pre className="bg-muted p-4 rounded text-sm text-muted-foreground whitespace-pre-wrap">{`purchase()
 - require(listing.active && kind == PurchaseContent)
 - pay_into_registry_vault_with_fee(...):
-  - currency checks: payer_ata.mint == listing.currency_mint == studio_mint
-  - treasury_ata.mint == studio_mint AND treasury_ata.owner == BYTEBOUND_TREASURY
+  - currency checks: all ATAs use studio_mint
+  - treasury_ata.owner == BYTEBOUND_TREASURY
   - vault_authority = PDA(["content-vault" | "collection-vault", target_mint], REGISTRY_PROGRAM_ID)
-  - vault_ata.owner == vault_authority AND vault_ata.mint == studio_mint
-  - split: fee = amount * 20% → treasury_ata; rest → vault_ata
+  - vault_ata.owner == vault_authority, mint == studio_mint
+  - split: 20% fee → treasury_ata; 80% → vault_ata
 - Emits Purchased`}</pre>
         </AccordionContent>
       </AccordionItem>
@@ -93,62 +103,71 @@ delist()
       {/* 3) Rent (20/80 split) */}
       <AccordionItem value="rent">
         <AccordionTrigger>
-          <PinkNum n={3} /> <span>Rent Functions (Content / Collection)</span>
+          <PinkNum n={3} /> <span>Rent (Content / Collection)</span>
         </AccordionTrigger>
         <AccordionContent>
           <p className="mb-2 text-muted-foreground">
-            Same split as purchase. Emits the rental end timestamp; enforcement is downstream (off-chain gate or another program).
+            Same split as purchase. Emits the rental end timestamp; enforcement is off-chain or via another program.
           </p>
 
-          <SubTitle>Contract Functions</SubTitle>
+          <SubTitle>Contract Flow</SubTitle>
           <pre className="bg-muted p-4 rounded text-sm text-muted-foreground whitespace-pre-wrap">{`rent()
 - require(listing.active && kind == RentalContent && duration_secs > 0)
 - pay_into_registry_vault_with_fee(...)  // same currency & vault checks as purchase
 - until_ts = now + duration_secs
 - Emits Rented { until_ts }`}</pre>
+          <p className="mt-2 text-xs text-muted-foreground">
+            <strong>Use the matching listing PDA:</strong> seeds must include <code>"rental"</code>.
+          </p>
         </AccordionContent>
       </AccordionItem>
 
       {/* 4) IP Licensing (20/80 split) */}
       <AccordionItem value="ip">
         <AccordionTrigger>
-          <PinkNum n={4} /> <span>Licensing Function (IPAssets)</span>
+          <PinkNum n={4} /> <span>Licensing (IPAssets)</span>
         </AccordionTrigger>
         <AccordionContent>
           <p className="mb-2 text-muted-foreground">
             Licensee pays in the studio token. Funds split 20% Treasury / 80% to the IP vault PDA.
           </p>
 
-          <SubTitle>Contract Functions</SubTitle>
+          <SubTitle>Contract Flow</SubTitle>
           <pre className="bg-muted p-4 rounded text-sm text-muted-foreground whitespace-pre-wrap">{`use_ip()
 - require(listing.active && kind == IpLicense)
 - pay_into_registry_vault_with_fee(...)
   - vault_authority = PDA(["ip-vault", ip_mint], REGISTRY_PROGRAM_ID)
 - Emits IpLicensed`}</pre>
+          <p className="mt-2 text-xs text-muted-foreground">
+            <strong>Use the matching listing PDA:</strong> seeds must include <code>"ip"</code>.
+          </p>
         </AccordionContent>
       </AccordionItem>
 
       {/* 5) Placement / Bounties (no fee) */}
       <AccordionItem value="placement">
         <AccordionTrigger>
-          <PinkNum n={5} /> <span>Placement / Advertising Function (IPAssets)</span>
+          <PinkNum n={5} /> <span>Placement / Advertising (Content / Collection)</span>
         </AccordionTrigger>
         <AccordionContent>
           <p className="mb-2 text-muted-foreground">
             Third parties add incentives (studio token) to a Content/Collection vault; 100% goes to the vault (no 20% fee).
           </p>
 
-          <SubTitle>Contract Functions</SubTitle>
+          <SubTitle>Contract Flow</SubTitle>
           <pre className="bg-muted p-4 rounded text-sm text-muted-foreground whitespace-pre-wrap">{`add_placement_funds(amount)
 - require(listing.active && kind == Placement)
-- pay_into_registry_vault(...)
-  - currency check == listing.currency_mint (studio_mint)
+- pay_into_registry_vault(...)  // no fee
+  - currency == listing.currency_mint (studio_mint)
   - vault_authority/ATA checks as above
 - Emits PlacementFunded`}</pre>
+          <p className="mt-2 text-xs text-muted-foreground">
+            <strong>Use the matching listing PDA:</strong> seeds must include <code>"placement"</code>.
+          </p>
         </AccordionContent>
       </AccordionItem>
 
-      {/* 6) Integration Checklist (merged 6/7/8) */}
+      {/* 6) Integration Checklist */}
       <AccordionItem value="common">
         <AccordionTrigger>
           <PinkNum n={6} /> <span>Common Rules (PDAs, Security, Accounts)</span>
@@ -172,8 +191,14 @@ delist()
           <SubTitle>Accounts to Pass</SubTitle>
           <ul className="list-disc pl-6 text-sm text-muted-foreground">
             <li><strong>Listing creation:</strong> <code>target_mint</code>, target Registry PDA, <code>studio_mint</code>, Studio PDA.</li>
-            <li><strong>purchase / rent / use_ip:</strong> <code>payer_ata(studio_mint)</code>, <code>treasury_ata(studio_mint, owner=BYTEBOUND_TREASURY)</code>, <code>vault_authority</code>, <code>vault_ata(studio_mint, allowOwnerOffCurve)</code>.</li>
-            <li><strong>add_placement_funds:</strong> omit Treasury; pass <code>vault_authority</code> + <code>vault_ata</code>.</li>
+            <li><strong>purchase / rent / use_ip:</strong> the <em>correct</em> listing PDA
+              (<code>"purchase"</code> | <code>"rental"</code> | <code>"ip"</code>) plus
+              <code> payer_ata(studio_mint)</code>, <code>treasury_ata(studio_mint, owner=BYTEBOUND_TREASURY)</code>,
+              <code> vault_authority</code>, <code> vault_ata(studio_mint, allowOwnerOffCurve)</code>.
+            </li>
+            <li><strong>add_placement_funds:</strong> listing PDA with <code>"placement"</code> tag, plus
+              <code> payer_ata</code>, <code> vault_authority</code>, <code> vault_ata</code>.
+            </li>
           </ul>
         </AccordionContent>
       </AccordionItem>

@@ -30,8 +30,8 @@ export default function RegistryWalkthrough() {
             <li>USDC mint: <code>external::TEST_USDC_MINT</code></li>
             <li>Idempotent-create ATAs (client-side):
               <ul className="list-disc pl-6">
-                <li>User USDC ATA: owner = user, mint = TEST_USDC_MINT</li>
-                <li>Treasury USDC ATA: owner = <code>external::BYTEBOUND_TREASURY</code>, mint = TEST_USDC_MINT</li>
+                <li>User USDC ATA: owner = <em>user</em>, mint = <code>TEST_USDC_MINT</code></li>
+                <li>Treasury USDC ATA: owner = <code>external::BYTEBOUND_TREASURY</code>, mint = <code>TEST_USDC_MINT</code></li>
               </ul>
             </li>
           </ul>
@@ -65,10 +65,18 @@ spend_generation_credits(credits: u64)
           <ul className="list-disc pl-6 text-sm text-muted-foreground">
             <li><strong>Before</strong> calling <code>verify_studio</code>:
               <ul className="list-disc pl-6">
-                <li>Creator holds ≥ <code>40,000,000 × 10^mint.decimals</code> of the studio token</li>
-                <li>ATAs exist: <code>creator_ata</code> and <code>treasury_ata</code> for the studio mint</li>
-                <li>Signers: <em>admin</em> (verifier) and <em>creator</em> (token authority)</li>
+                <li>Creator holds ≥ <code>40,000,000 × 10^mint.decimals</code> of the studio token.</li>
+                <li>ATAs exist for the <strong>same studio token mint</strong>:
+                  <ul className="list-disc pl-6">
+                    <li><code>creator_ata</code>: owner = <em>creator</em>, mint = <em>studio token mint</em></li>
+                    <li><code>treasury_ata</code>: owner = <code>external::BYTEBOUND_TREASURY</code>, mint = <em>studio token mint</em></li>
+                  </ul>
+                </li>
+                <li>Signers: <em>admin</em> (verifier) and <em>creator</em> (token authority).</li>
               </ul>
+            </li>
+            <li className="mt-2 italic text-muted-foreground">
+              Note: <code>PUMPFUN_V2_PROGRAM</code> is defined in the module but not used by these instructions.
             </li>
           </ul>
 
@@ -203,8 +211,6 @@ withdraw_collection_assets(amount: u64)
 - PDA(["collection-vault", collection_mint]) signs and transfers 'amount'`}</pre>
         </AccordionContent>
       </AccordionItem>
-
-      
 
       {/* 6) Common Rules & Gotchas */}
       <AccordionItem value="rules">
