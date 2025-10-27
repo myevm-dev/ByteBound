@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "skipLibCheck": true
+  },
+  "include": [],                         
+  "exclude": [
+    "program/bytebound_market/client/**/*",
+    "program/bytebound_registry/client/**/*"
+  ]
+}
